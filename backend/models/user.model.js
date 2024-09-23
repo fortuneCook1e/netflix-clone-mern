@@ -2,7 +2,7 @@
 import mongoose from "mongoose";
 
 const userSchema = mongoose.Schema({
-  name: {
+  username: {
     type: String,
     required: true,
     unique: true,
@@ -26,5 +26,5 @@ const userSchema = mongoose.Schema({
   },
 });
 
-export const User = mongoose.model("User", kittySchema);
+export const User = mongoose.model("User", userSchema);
 // the mongoDB will automatically convert the 'User' -> 'users'
