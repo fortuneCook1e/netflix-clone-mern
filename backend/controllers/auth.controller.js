@@ -1,5 +1,6 @@
 import { User } from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
+import { generateTokenAndSetCookie } from "../utils/generateToken.js";
 
 export async function signup(req, res) {
   try {
@@ -39,7 +40,7 @@ export async function signup(req, res) {
         message: "Password must be at least 6 characters long",
       });
     }
-    // create new user
+    // pick a random avatar for the user
     const DEFAULT_AVATAR = ["/avater1.png", "/avatar2.png", "/avatar3.png"];
     const randomAvatar =
       DEFAULT_AVATAR[Math.floor(Math.random() * DEFAULT_AVATAR.length)];
@@ -47,12 +48,17 @@ export async function signup(req, res) {
     // hash password using bcryptjs
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
+    //create new user
     const newUser = new User({
       username: username,
       email: email,
       password: hashedPassword,
       image: randomAvatar,
     });
+
+    // generate token and set cookie
+    generateTokenAndSetCookie(newUser._id, res);
+    // save user to database
     await newUser.save();
     res.status(200).json({
       success: true,
@@ -73,5 +79,16 @@ export async function login(req, res) {
 }
 
 export async function logout(req, res) {
-  res.send("logout route");
+  // the logout function simple clear the token
+
+  try {
+    // clear the token from the client side
+    res.clearCookie("jwt-netflix");
+    res
+      .status(200)
+      .json({ success: true, message: "User logged out successfully" }); // return success message to the client
+  } catch (error) {
+    console.log("Error in auth.controller logout: " + error.message);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
 }
