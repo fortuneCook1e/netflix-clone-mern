@@ -75,7 +75,47 @@ export async function signup(req, res) {
 }
 
 export async function login(req, res) {
-  res.send("login route");
+  try {
+    const { email, password } = req.body;
+
+    // ensure all fields are filled in
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
+    }
+
+    // check if user exists with the provided email
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid credentials" });
+    }
+    // compare hashed password with the one in the database
+    const isMatch = await bcryptjs.compare(password, user.password);
+    if (!isMatch) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid credentials" });
+    }
+
+    // proceed to login if everything is good
+    // generate and set token
+    generateTokenAndSetCookie(user._id, res);
+    // return user data with token to the client
+    res.status(200).json({
+      success: true,
+      message: "User logged in successfully",
+      user: {
+        ...user._doc, // user._doc contains all the data of the user in the database. The ... is to spread out the data
+        password: "", // remove password from the response to avoid security issues
+      },
+    });
+  } catch (error) {
+    console.log("Error in auth.controller login: " + error.message);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
 }
 
 export async function logout(req, res) {
