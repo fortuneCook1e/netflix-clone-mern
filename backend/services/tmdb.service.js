@@ -5,7 +5,7 @@ export const fecthFromTMDB = async (url) => {
   const options = {
     headers: {
       accept: "application/json",
-      Authorization: "Bearer" + ENV_VARS.TMDB_API_KEY,
+      Authorization: "Bearer " + ENV_VARS.TMDB_API_KEY,
     },
   };
 
