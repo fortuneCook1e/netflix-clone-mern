@@ -132,3 +132,12 @@ export async function logout(req, res) {
     res.status(500).json({ success: false, message: "Server Error" });
   }
 }
+
+export async function authCheck(req, res) {
+  try {
+    res.status(200).json({ success: true, user: req.user }); //req.user is from the protectRoute middleware
+  } catch (error) {
+    console.log("Error in auth.controller authCheck:" + error.message);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+}

@@ -1,14 +1,20 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuthStore } from "../store/authUser.store.js";
 
 const SignupPage = () => {
-  const [email, setEmail] = useState("");
+  const { searchParams } = new URL(document.location);
+  const emailValue = searchParams.get("email");
+
+  const [email, setEmail] = useState(emailValue || "");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const { signup } = useAuthStore();
+
   const handleSignup = async (e) => {
     e.preventDefault(); // prevent page to refresh after submitting
-    console.log(email, username, password);
+    signup({ username: username, email: email, password: password });
   };
 
   return (
@@ -36,7 +42,6 @@ const SignupPage = () => {
               <input
                 type="email"
                 id="email"
-                required
                 className="w-full px-3 py-2 border mt-1 border-gray-700 bg-transparent
                 rounded-md text-white focus:outline-none focus:ring"
                 placeholder="you@example.com"
@@ -55,7 +60,6 @@ const SignupPage = () => {
               <input
                 type="text"
                 id="Username"
-                required
                 className="w-full px-3 py-2 border mt-1 border-gray-700 bg-transparent
                 rounded-md text-white focus:outline-none focus:ring"
                 placeholder="username"
@@ -74,7 +78,6 @@ const SignupPage = () => {
               <input
                 type="password"
                 id="password"
-                required
                 className="w-full px-3 py-2 border mt-1 border-gray-700 bg-transparent
                 rounded-md text-white focus:outline-none focus:ring"
                 placeholder="******"
