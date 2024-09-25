@@ -6,6 +6,7 @@ export const useAuthStore = create((set) => ({
   user: null,
   isSigningUp: false, // loading state
   isCheckingAuth: true,
+  isLoggingOut: false,
   signup: async (credentials) => {
     try {
       set({ isSigningUp: true });
@@ -23,7 +24,17 @@ export const useAuthStore = create((set) => ({
     }
   },
   login: async () => {},
-  logout: async () => {},
+  logout: async () => {
+    try {
+      set({ isLoggingOut: true });
+      // make an api call to the logout endpoint
+      await axios.post("/api/v1/auth/logout");
+      set({ user: null, isLoggingOut: false });
+      toast.success("Logged out successfully");
+    } catch (error) {
+      toast.error(error.response.data.message || "Error logging out");
+    }
+  },
   authCheck: async () => {
     // the purpose of this is to determine which screen should be rendered (e.g. homeScreen or authScreen)
     try {
