@@ -41,7 +41,7 @@ export async function signup(req, res) {
       });
     }
     // pick a random avatar for the user
-    const DEFAULT_AVATAR = ["/avater1.png", "/avatar2.png", "/avatar3.png"];
+    const DEFAULT_AVATAR = ["/avatar1.png", "/avatar2.png", "/avatar3.png"];
     const randomAvatar =
       DEFAULT_AVATAR[Math.floor(Math.random() * DEFAULT_AVATAR.length)];
 

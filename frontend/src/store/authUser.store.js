@@ -7,6 +7,7 @@ export const useAuthStore = create((set) => ({
   isSigningUp: false, // loading state
   isCheckingAuth: true,
   isLoggingOut: false,
+  isLoggingIn: false,
   signup: async (credentials) => {
     try {
       set({ isSigningUp: true });
@@ -23,7 +24,18 @@ export const useAuthStore = create((set) => ({
       set({ user: null, isSigningUp: false });
     }
   },
-  login: async () => {},
+  login: async (credentials) => {
+    try {
+      set({ isLoggingIn: true });
+      // make an api call to the login endpoint
+      const res = await axios.post("/api/v1/auth/login", credentials);
+      set({ user: res.data.user, isLoggingIn: false });
+      toast.success("Logged in successfully");
+    } catch (error) {
+      toast.error(error.response.data.message || "Login Failed");
+      set({ user: null, isLoggingIn: false });
+    }
+  },
   logout: async () => {
     try {
       set({ isLoggingOut: true });
@@ -37,6 +49,7 @@ export const useAuthStore = create((set) => ({
   },
   authCheck: async () => {
     // the purpose of this is to determine which screen should be rendered (e.g. homeScreen or authScreen)
+    // it will be called as a useEffect when the app is started
     try {
       set({ isCheckingAuth: true });
       const res = await axios.get("/api/v1/auth/authcheck");
