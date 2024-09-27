@@ -75,7 +75,7 @@ export async function getMovieByCategory(req, res) {
     const moviesByCategory = await fecthFromTMDB(url);
     res.status(200).json({ success: true, content: moviesByCategory.results });
   } catch (error) {
-    console.log("Error in movie.controller getSimilarMovies" + error.message);
+    console.log("Error in movie.controller getMovieByCategory" + error.message);
     res.status(500).json({ success: false, message: "Server error" });
   }
 }
