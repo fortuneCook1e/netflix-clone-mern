@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/authUser.store.js";
 import { useEffect } from "react";
 import { Loader } from "lucide-react";
+import WatchPage from "./pages/WatchPage";
 
 const App = () => {
   const { user, authCheck, isCheckingAuth } = useAuthStore();
@@ -41,6 +42,10 @@ const App = () => {
           element={!user ? <LoginPage /> : <Navigate to={"/"} />}
         />{" "}
         {/** after logged in, bring them to home page */}
+        <Route
+          path="/watch/:id"
+          element={user ? <WatchPage /> : <Navigate to={"/"} />}
+        />{" "}
       </Routes>
       <Toaster />
       <Footer />
