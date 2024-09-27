@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import WatchPage from "./pages/WatchPage";
 import SearchPage from "./pages/SearchPage.jsx";
+import HistoryPage from "./pages/HistoryPage.jsx";
 
 const App = () => {
   const { user, authCheck, isCheckingAuth } = useAuthStore();
@@ -45,11 +46,15 @@ const App = () => {
         {/** after logged in, bring them to home page */}
         <Route
           path="/watch/:id"
-          element={user ? <WatchPage /> : <Navigate to={"/"} />}
+          element={user ? <WatchPage /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/search"
-          element={user ? <SearchPage /> : <Navigate to={"/"} />}
+          element={user ? <SearchPage /> : <Navigate to={"/login"} />}
+        />
+        <Route
+          path="/history"
+          element={user ? <HistoryPage /> : <Navigate to={"/login"} />}
         />
       </Routes>
       <Toaster />

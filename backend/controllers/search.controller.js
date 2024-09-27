@@ -104,11 +104,13 @@ export async function getSearchHistory(req, res) {
 
 export async function removeItemFromSearchHistory(req, res) {
   try {
-    let { id } = req.params; // the id from req is string but the id in databse is integer
-    id = parseInt(id); // convert this id to integer so that we can compare it with the one in database
+    let { createdAt } = req.params; // the id from req is string but the id in databse is integer
+    createdAt = new Date(createdAt);
+
+    //id = parseInt(id); // convert this id to integer so that we can compare it with the one in database
     await User.findByIdAndUpdate(req.user._id, {
       $pull: {
-        searchHistory: { id: id },
+        searchHistory: { createdAt: createdAt },
       },
     });
     res

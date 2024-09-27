@@ -14,6 +14,6 @@ router.get("/movie/:query", searchMovie);
 router.get("/tv/:query", searchTv);
 
 router.get("/history", getSearchHistory);
-router.get("/history/:id", removeItemFromSearchHistory);
+router.get("/history/:createdAt", removeItemFromSearchHistory);
 
 export default router;
