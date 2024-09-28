@@ -10,6 +10,8 @@ import { connectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 import { protectRoute } from "./middleware/protectRoute.js";
 
+import path from "path";
+
 const app = express();
 
 app.use(express.json()); // allow the request body to be parsed as JSON
@@ -21,6 +23,16 @@ app.use("/api/v1/tv", protectRoute, tvRoutes);
 app.use("/api/v1/search", protectRoute, searchRoutes);
 
 const port = ENV_VARS.PORT;
+
+// prepare for deployment
+const __dirname = path.resolve();
+if (ENV_VARS.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "frontend/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  });
+}
+
 app.listen(port, () => {
   console.log(`server running on http://localhost:${port}`);
   connectDB();
