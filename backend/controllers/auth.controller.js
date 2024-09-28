@@ -41,7 +41,7 @@ export async function signup(req, res) {
       });
     }
     // pick a random avatar for the user
-    const DEFAULT_AVATAR = ["/avater1.png", "/avatar2.png", "/avatar3.png"];
+    const DEFAULT_AVATAR = ["/avatar1.png", "/avatar2.png", "/avatar3.png"];
     const randomAvatar =
       DEFAULT_AVATAR[Math.floor(Math.random() * DEFAULT_AVATAR.length)];
 
@@ -129,6 +129,15 @@ export async function logout(req, res) {
       .json({ success: true, message: "User logged out successfully" }); // return success message to the client
   } catch (error) {
     console.log("Error in auth.controller logout: " + error.message);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+}
+
+export async function authCheck(req, res) {
+  try {
+    res.status(200).json({ success: true, user: req.user }); //req.user is from the protectRoute middleware
+  } catch (error) {
+    console.log("Error in auth.controller authCheck:" + error.message);
     res.status(500).json({ success: false, message: "Server Error" });
   }
 }
